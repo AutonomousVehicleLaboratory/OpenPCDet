@@ -11,6 +11,7 @@ import torch.distributed as dist
 from ...ops.iou3d_nms import iou3d_nms_utils
 from ...utils import box_utils, common_utils, calibration_kitti
 from pcdet.datasets.kitti.kitti_object_eval_python import kitti_common
+from pathlib import Path
 
 class DataBaseSampler(object):
     def __init__(self, root_path, sampler_cfg, class_names, logger=None):
@@ -29,7 +30,7 @@ class DataBaseSampler(object):
         self.use_shared_memory = sampler_cfg.get('USE_SHARED_MEMORY', False)
 
         for db_info_path in sampler_cfg.DB_INFO_PATH:
-            db_info_path = self.root_path.resolve() / db_info_path
+            db_info_path = Path(self.root_path).resolve() / db_info_path
             if not db_info_path.exists():
                 assert len(sampler_cfg.DB_INFO_PATH) == 1
                 sampler_cfg.DB_INFO_PATH[0] = sampler_cfg.BACKUP_DB_INFO['DB_INFO_PATH']
@@ -390,7 +391,7 @@ class DataBaseSampler(object):
                 start_offset, end_offset = info['global_data_offset']
                 obj_points = copy.deepcopy(gt_database_data[start_offset:end_offset])
             else:
-                file_path = self.root_path / info['path']
+                file_path = Path(self.root_path) / info['path']
 
                 obj_points = np.fromfile(str(file_path), dtype=np.float32).reshape(
                     [-1, self.sampler_cfg.NUM_POINT_FEATURES])

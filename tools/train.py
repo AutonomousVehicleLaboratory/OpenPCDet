@@ -123,7 +123,8 @@ def main():
         training=True,
         merge_all_iters_to_one_epoch=args.merge_all_iters_to_one_epoch,
         total_epochs=args.epochs,
-        seed=666 if args.fix_random_seed else None
+        seed=666 if args.fix_random_seed else None,
+        root_path = cfg.DATA_CONFIG.DATA_PATH
     )
 
     model = build_network(model_cfg=cfg.MODEL, num_class=len(cfg.CLASS_NAMES), dataset=train_set)
@@ -210,7 +211,8 @@ def main():
         dataset_cfg=cfg.DATA_CONFIG,
         class_names=cfg.CLASS_NAMES,
         batch_size=args.batch_size,
-        dist=dist_train, workers=args.workers, logger=logger, training=False
+        dist=dist_train, workers=args.workers, logger=logger, training=False,
+        root_path = cfg.DATA_CONFIG.DATA_PATH
     )
     eval_output_dir = output_dir / 'eval' / 'eval_with_train'
     eval_output_dir.mkdir(parents=True, exist_ok=True)
